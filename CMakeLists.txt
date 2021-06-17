@@ -1,18 +1,32 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(avt_341)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
-#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if($ENV{ROS_DISTRO} STREQUAL "noetic")
+  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
-  tf
-)
+else()
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
+if($ENV{ROS_DISTRO} STREQUAL "noetic")
+  find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    rospy
+    pcl_ros
+    std_msgs
+    tf
+  )
+else()
+  find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    rospy
+    std_msgs
+    tf  
+  )
+endif()
+>>>>>>> 79bcd10e606e4f4fab7875b72dfad2b2270d482e
 
 find_package(PCL REQUIRED)
 add_definitions(${PCL_DEFINITIONS})
@@ -71,9 +85,11 @@ target_link_libraries(avt_341_local_planner_node
 
 add_executable(avt_341_global_path_node 
   src/planning/global/avt_341_global_path_node.cpp 
+  src/planning/global/astar.cpp
 )
 target_link_libraries(avt_341_global_path_node
   ${catkin_LIBRARIES}
+  X11
 )
 
 add_executable(avt_341_global_follower_path_node 

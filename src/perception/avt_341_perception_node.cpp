@@ -21,6 +21,7 @@ bool grid_created = false;
 bool odom_rcvd = false;
 std::vector<nav_msgs::Odometry> current_pose_list;
 bool use_registered = true;
+float overhead_clearance = 100.0f;
 
 // naisense
 bool use_lidar = false;
@@ -37,7 +38,7 @@ void PointCloudCallbackRegistered(const sensor_msgs::PointCloud2::ConstPtr& rcv_
 			tp.x = point_cloud.points[p].x;
 			tp.y = point_cloud.points[p].y;
 			tp.z = point_cloud.points[p].z;
-			if ( !(tp.x==0.0 && tp.y==0.0) && !std::isnan(tp.x)){
+			if ( !(tp.x==0.0 && tp.y==0.0) && !std::isnan(tp.x) && (tp.z-current_pose.pose.pose.position.z)<overhead_clearance ){
 				points.push_back(tp);
 				
 			}
@@ -77,7 +78,9 @@ void PointCloudCallbackUnregistered(const sensor_msgs::PointCloud2::ConstPtr& rc
 				tp.x = vp.x();
 				tp.y = vp.y();
 				tp.z = vp.z();
-				points.push_back(tp);
+				if ( (tp.z-current_pose.pose.pose.position.z)<overhead_clearance){
+					points.push_back(tp);
+				}
 				
 			}
 		}
@@ -98,6 +101,7 @@ void PointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr& rcv_cloud){
 
 void OdometryCallback(const nav_msgs::Odometry::ConstPtr& rcv_odom){
 	current_pose = *rcv_odom;
+	//std::cout<<"Vehicle positoin = "<<current_pose.pose.pose.position.x<<" "<<current_pose.pose.pose.position.y<<" "<<current_pose.pose.pose.position.z<<std::endl;
 	odom_rcvd = true;
 	current_pose_list.push_back(current_pose);
 	if (current_pose_list.size()>50) current_pose_list.erase(current_pose_list.begin());
@@ -155,6 +159,9 @@ int main(int argc, char *argv[]) {
 	}
 	if (ros::param::has("~use_registered")){
 		ros::param::get("~use_registered",use_registered);
+	}
+	if (ros::param::has("~overhead_clearance")){
+		ros::param::get("~overhead_clearance",overhead_clearance);
 	}
 
 	grid.SetSlopeThreshold(thresh);
