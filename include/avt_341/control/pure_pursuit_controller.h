@@ -23,6 +23,7 @@
 #include "geometry_msgs/Twist.h"
 #include "nav_msgs/Path.h"
 #include "nav_msgs/Odometry.h"
+#include "avt_341/avt_341_utils.h"
 
 namespace avt_341 {
 namespace control{
@@ -129,7 +130,8 @@ public:
 	 * \param state The vehicle state
 	 */
 	void SetVehicleState(nav_msgs::Odometry state);
-
+	
+	utils::vec2 GetLatestGoal() {return latest_goal;}
 private:
 	float wheelbase_; //meters
 	float max_steering_angle_; //radians
@@ -145,6 +147,8 @@ private:
 	float veh_y_;
 	float veh_heading_;
 	float veh_speed_;
+	
+	utils::vec2 latest_goal;
 };
 
 } // namespace control

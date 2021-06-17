@@ -1,5 +1,4 @@
 #include "avt_341/control/pure_pursuit_controller.h"
-#include "avt_341/avt_341_utils.h"
 
 namespace avt_341 {
 namespace control{
@@ -57,7 +56,11 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 	utils::vec2 currpos(veh_x_, veh_y_);
 	float path_length = utils::length(path[np - 1] - currpos);
 	float lookahead = k_ * veh_speed_;
-
+		
+	// naisense
+	//std::cout << "Current speed: " << veh_speed_ << std::endl;
+	//std::cout << "------------------\ncurrent position: " << veh_x_ << ", " << veh_y_ << std::endl;
+	
 	if (lookahead > max_lookahead_)lookahead = max_lookahead_;
 	if (lookahead < min_lookahead_)lookahead = min_lookahead_;
 	if (lookahead > path_length)lookahead = path_length - 0.01;
@@ -67,6 +70,7 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 	int start_seg = 0;
 	for (int i = 0; i < np - 1; i++) {
 		float d0 = PointToSegmentDistance(path[i], path[i + 1], currpos);
+		//std::cout << "path segment #"<<i<< ", "<< path[i].x << ", " << path[i].y << std::endl; 
 		if (d0 < closest) {
 			closest = d0;
 			start_seg = i;
@@ -78,7 +82,7 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 	if (closest < lookahead) {
 		//find point on path at lookahead distance away
 		float accum_dist = closest;
-
+		
 		//for (int i=0;i<np-1;i++){
 		for (int i = start_seg; i < np - 1; i++) {
 			utils::vec2 v = path[i + 1] - path[i];
@@ -97,11 +101,19 @@ geometry_msgs::Twist PurePursuitController::GetDcFromTraj(nav_msgs::Path traj) {
 		}
 	}
 
+	// naisense
+	//std::cout << "next goal: " << goal.x << ", " << goal.y << std::endl;
+	latest_goal = goal;
+	
 	//find the angle, alpha, between the current orientation and the goal
 	utils::vec2 curr_dir(cos(veh_heading_), sin(veh_heading_));
 	utils::vec2 to_goal(goal.x - veh_x_,goal.y-veh_y_);
 	to_goal = to_goal / utils::length(to_goal);
 	float alpha = (float)atan2(to_goal.y, to_goal.x) - (float)atan2(curr_dir.y, curr_dir.x);
+	
+	//std::cout << "current direction: " << curr_dir.x <<  ", " << curr_dir.y << std::endl;
+	//std::cout << "to goal direction: " << to_goal.x << ", " << to_goal.y << std::endl;
+	//std::cout << "degree between direction and to_goal: " << alpha << std::endl;
 
 	//determine the desired normalized steering angle
 	float sangle = (float)atan2(2 * wheelbase_*sin(alpha), lookahead);

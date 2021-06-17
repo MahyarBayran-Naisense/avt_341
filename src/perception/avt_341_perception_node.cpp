@@ -22,6 +22,9 @@ bool odom_rcvd = false;
 std::vector<nav_msgs::Odometry> current_pose_list;
 bool use_registered = true;
 
+// naisense
+bool use_lidar = false;
+
 void PointCloudCallbackRegistered(const sensor_msgs::PointCloud2::ConstPtr& rcv_cloud){
 	// assumes point cloud is already registered to odom frame
 	sensor_msgs::PointCloud point_cloud;
@@ -158,6 +161,25 @@ int main(int argc, char *argv[]) {
 	grid.SetRes(grid_res);
 	grid.SetCorner(grid_llx,grid_lly);
 	
+	if (true)
+	{
+		grid.ClearGrid();
+	
+		sensor_msgs::PointCloud point_cloud;
+		point_cloud.points.clear();
+		std::vector<geometry_msgs::Point32> points;
+		geometry_msgs::Point32 tp;
+		tp.x = 0;
+		tp.y = 100;
+		tp.z = 0;
+		points.push_back(tp);
+		point_cloud.points = points;
+		grid.AddPoints(point_cloud);
+		grid_created = true;
+		
+		std::cout << "grid map set to default" << std::endl;
+	}
+	
 	double start_time = ros::Time::now().toSec();
 	ros::Rate rate(100.0);
 	while (ros::ok()){
@@ -171,6 +193,7 @@ int main(int argc, char *argv[]) {
 				grd = grid.GetGrid("slope");
 			}
 			grid_pub.publish(grd);
+			//std::cout << "grid published" << std::endl;
 		}
 		ros::spinOnce();
 		rate.sleep();

@@ -124,6 +124,7 @@ int main(int argc, char *argv[]){
   while (ros::ok()){
     double start_secs = ros::WallTime::now().toSec();
     if (global_path.poses.size() > 0 && odom_rcvd && grid.data.size() > 0){
+      
       std::vector<avt_341::utils::vec2> path_points;
       for (int i = 0; i < global_path.poses.size(); i++){
         avt_341::utils::vec2 point(global_path.poses[i].pose.position.x, global_path.poses[i].pose.position.y);

@@ -120,7 +120,7 @@ inline float GetHeadingFromOrientation(geometry_msgs::Quaternion orientation){
 	tf::Matrix3x3 m(q);
 	double roll, pitch, yaw;
 	m.getRPY(roll, pitch, yaw);
-    return (float)yaw;
+    return (float)(yaw);
 }
 
 /// Convert any type to a string with zero padding

@@ -6,11 +6,11 @@ namespace avt_341{
 namespace perception{
 
 ElevationGrid::ElevationGrid(){
-  width_ = 200.0f;
-  height_ = 200.0f;
-  llx_ = -100.0f;
-  lly_ = -100.0f;
-  res_ = 0.5f;
+  width_ = 1100.0f;
+  height_ = 2000.0f;
+  llx_ = 0.0f;
+  lly_ = -2000.0f;
+  res_ = 2.0f;
   ResizeGrid();
   thresh_ = 1.0f;
   dilate_ = false;

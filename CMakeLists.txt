@@ -3,7 +3,9 @@ project(avt_341)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -71,6 +73,13 @@ add_executable(avt_341_global_path_node
   src/planning/global/avt_341_global_path_node.cpp 
 )
 target_link_libraries(avt_341_global_path_node
+  ${catkin_LIBRARIES}
+)
+
+add_executable(avt_341_global_follower_path_node 
+  src/planning/global/avt_341_global_follower_path_node.cpp 
+)
+target_link_libraries(avt_341_global_follower_path_node
   ${catkin_LIBRARIES}
 )
 
