@@ -26,7 +26,6 @@ else()
     tf  
   )
 endif()
->>>>>>> 79bcd10e606e4f4fab7875b72dfad2b2270d482e
 
 find_package(PCL REQUIRED)
 add_definitions(${PCL_DEFINITIONS})

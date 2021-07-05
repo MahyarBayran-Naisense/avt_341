@@ -1,6 +1,0 @@
-<arg name="na_ns">
-<group ns="$(arg na_ns)">
-	<include file="$(find avt_341)/launch/naisense.launch">
-		<arg name="namespace" value="$(arg na_ns)" />
-	</include>
-</group>

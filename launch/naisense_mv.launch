@@ -6,6 +6,4 @@
   
  <include ns="fed_alpha" file="$(find avt_341)/launch/lead_vehicle.launch"/>
 
- <include ns="fed_alpha_1" file="$(find avt_341)/launch/lead_vehicle.launch"/>
-
 </launch>

@@ -24,7 +24,7 @@ bool use_registered = true;
 float overhead_clearance = 100.0f;
 
 // naisense
-bool use_lidar = false;
+bool use_lidar = true;
 
 void PointCloudCallbackRegistered(const sensor_msgs::PointCloud2::ConstPtr& rcv_cloud){
 	// assumes point cloud is already registered to odom frame
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "avt_341_perception_node");
 	
 	ros::NodeHandle n;
-	ros::Subscriber pc_sub = n.subscribe("avt_341/points",2,PointCloudCallback);
+	ros::Subscriber pc_sub = n.subscribe("vortexlidaractor/pointcloud2",2,PointCloudCallback);
 	ros::Subscriber odom_sub = n.subscribe("avt_341/odometry",10, OdometryCallback);
 	ros::Publisher grid_pub = n.advertise<nav_msgs::OccupancyGrid>("avt_341/occupancy_grid", 1);
 
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 	grid.SetRes(grid_res);
 	grid.SetCorner(grid_llx,grid_lly);
 	
-	if (true)
+	if (!use_lidar)
 	{
 		grid.ClearGrid();
 	
